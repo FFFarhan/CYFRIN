@@ -1,7 +1,7 @@
 
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.20;
 
 // import {SimpleStorage, SimpleStorage2} from "./SimpleStorage.sol";
 import {SimpleStorage} from "./SimpleStorage.sol";
@@ -20,7 +20,7 @@ contract StorageFactory {
         uint256 _simpleStorageNumber
     ) public {
         // Address
-        // ABI
+        // ABI - Application Binary Interface
         // SimpleStorage(address(simpleStorageArray[_simpleStorageIndex])).store(_simpleStorageNumber);
         listOfSimpleStorageContracts[_simpleStorageIndex].store(
             _simpleStorageNumber
