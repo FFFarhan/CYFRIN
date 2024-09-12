@@ -1,43 +1,39 @@
+// I'm a comment!
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;  //State the version
 
-contract SimpleStorage{
-    // basic types: boolean, uint(unsigned +ve whole number), int, address, bytes
-    // functions and variables are internal(Not Visible) by default.
-    // they can be public, private, internal, external (called via this.function_name)
-    uint256 public myFavouriteNumber;   
-    uint256[] listOfFavouriteNumbers;    // make lists using uint256[]
-    struct Person{
-        uint256 favouriteNumber;
+pragma solidity ^0.8.20;
+
+// pragma solidity ^0.8.0;
+// pragma solidity >=0.8.0 <0.9.0;
+
+contract SimpleStorage {
+    uint256 myFavoriteNumber;
+
+    struct Person {
+        uint256 favoriteNumber;
         string name;
     }
-    // Person public myFriend = Person(7, "Pat");
-    // Person public mariah = Person(9, "MiahAr");
-    Person[] public listOfPeople;   //dynamic, add a number in the [] to make it static
-    
-    mapping(string => uint256) public nameToFavouriteNumbers;
+    // uint256[] public anArray;
+    Person[] public listOfPeople;
 
+    mapping(string => uint256) public nameToFavoriteNumber;
 
-
-    function store(uint256 _favouriteNumber) public {
-    myFavouriteNumber = _favouriteNumber;
-    
-   }
-
-   function retrieve() public view returns (uint256){
-    return myFavouriteNumber;
-   }
-
-    function addPerson(string memory _name, uint256 _favouriteNumber) public {
-        Person memory newPerson = Person(_favouriteNumber, _name);
-        listOfPeople.push(newPerson);
-        nameToFavouriteNumbers[_name] = _favouriteNumber;
-        // listOfPeople.push(Person(_favouriteNumber, _name);   //Works same as above
-        // calldata and memory exis only for the call i.e they are temporary variables
-        //memory can be manipulated, calldata cannot be modified
-        //storage is perm and can be modified. cant add storage to functions
+    function store(uint256 _favoriteNumber) public virtual {
+        myFavoriteNumber = _favoriteNumber;
     }
 
+    function retrieve() public view returns (uint256) {
+        return myFavoriteNumber;
+    }
 
-
+    function addPerson(string memory _name, uint256 _favoriteNumber) public {
+        listOfPeople.push(Person(_favoriteNumber, _name));
+        nameToFavoriteNumber[_name] = _favoriteNumber;
+    }
 }
+
+contract SimpleStorage2 {}
+
+contract SimpleStorage3 {}
+
+contract SimpleStorage4 {}
