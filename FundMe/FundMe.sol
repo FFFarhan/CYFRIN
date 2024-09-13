@@ -8,16 +8,19 @@ import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interf
 //set minimum spend amount
 
 contract FundMe{
-    function fund() public {
 
+    uint256 public minimumUsd = 5*10e18;
+
+    function fund() public payable  {
+        require(getConversionRate(msg.value) >= minimumUsd, "Not Enough Eth");
     }
     function withdraw() public payable {
         //allow users to send eth
         //set min limit 
-        require(msg.value > 2100000000000000, "Not Enough Eth");
+        
     }
 
-    function getPrice() internal view returns (uint256) {
+    function getPrice() public view returns (uint256) {
         // Sepolia ETH / USD Address
         // https://docs.chain.link/data-feeds/price-feeds/addresses
         AggregatorV3Interface priceFeed = AggregatorV3Interface(
@@ -27,7 +30,11 @@ contract FundMe{
         // ETH/USD rate in 18 digit
         return uint256(answer * 10000000000);
     }
-    function getConversionRate() public {}
+    function getConversionRate(uint256 ethAmount) public view returns (uint256) {
+        uint256 ethPrice = getPrice();
+        uint256 ethAmountInUsd = (ethPrice * ethAmount) / 1e8;
+        return ethAmountInUsd;
+    }
 
 
 
