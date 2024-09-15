@@ -9,26 +9,36 @@ import {PriceConverter} from "./PriceConverter.sol";
 contract FundMe{
 
     using PriceConverter for uint256;
-    address public owner;
-    uint256 public minimumUsd = 5e18;
+    address public immutable i_owner;
+    uint256 public constant MINIMUMUSD = 5e18;
+    error NotOwner();
 
 address[] public funders;
 mapping(address funder=>uint256 amount ) public addressToAmountFunded;
 
 constructor(){
-    owner == msg.sender;
+    i_owner = msg.sender;
 }
 
 
     function fund() public payable  {
-        require(msg.value.getConversionRate() >= minimumUsd, "didnt send enough ETH");
+        require(msg.value.getConversionRate() >= MINIMUMUSD, "didnt send enough ETH");
         funders.push(msg.sender);
         addressToAmountFunded[msg.sender]  = addressToAmountFunded[msg.sender] + msg.value;
     }
+
+    modifier onlyOwner(){
+    
+    if (msg.sender != i_owner){
+            revert NotOwner();
+        }
+    _;
+    }
+
     function withdraw() public onlyOwner {
         //allow users to send eth
         //set min limit 
-        // require(msg.sender == owner, "Must be owner");   // added as a modifier
+        // require(msg.sender == i_owner, "Must be owner");   // added as a modifier
         for(uint256 fundersIndex = 0; fundersIndex < funders.length; fundersIndex++){
             address funder = funders[fundersIndex];
             addressToAmountFunded[funder] = 0;
@@ -48,13 +58,15 @@ constructor(){
         (bool callSuccess, ) = payable (msg.sender).call{value: address(this).balance}("");
         require(callSuccess, "Call Failed");
         
+        
     }
-modifier onlyOwner(){
-    require(msg.sender == owner, "Must be owner");
-        _;
-    }
+    
+receive() external payable { 
+    fund();
+}
 
-
-
+fallback() external payable {
+    fund();
+ }
 
 }
